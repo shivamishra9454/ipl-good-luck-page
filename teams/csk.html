@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -19,5 +19,243 @@
     </a>
     <br>
     <a href="../assets/QR_FILENAME.png" download class="button">Download QR Code</a>
+</body>
+</html> -->
+]
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CSK Good Luck Fund 💛</title>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: linear-gradient(#fff8cc, #ffe066);
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      max-width: 380px;
+      width: 100%;
+      background: white;
+      margin: 20px;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px #f4c300;
+    }
+
+    h1 { color: #f4c300; }
+
+    .chip {
+      padding: 8px 14px;
+      margin: 5px;
+      border-radius: 20px;
+      background: #ffe066;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    input {
+      padding: 10px;
+      width: 120px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .payBtn { background: #f4c300; }
+
+    .ticker {
+      background: black;
+      color: white;
+      padding: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .ticker span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scroll 10s linear infinite;
+    }
+
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .popup {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: black;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
+      opacity: 0;
+      transition: 0.5s;
+    }
+
+    .qr-section img {
+      width: 200px;
+      cursor: pointer;
+      border-radius: 15px;
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h1>💛 CSK GOOD LUCK 💛</h1>
+  <p>Whistle Podu 🏏</p>
+
+  <!-- Amount chips -->
+  <div>
+    <span class="chip" onclick="setAmt(10)">₹10</span>
+    <span class="chip" onclick="setAmt(50)">₹50</span>
+    <span class="chip" onclick="setAmt(101)">₹101</span>
+  </div>
+
+  <br>
+  <input id="amount" placeholder="₹ Amount">
+  <br><br>
+
+  <!-- Razorpay button -->
+  <button class="payBtn" onclick="pay()">💛 Send Luck</button>
+  <!-- QR/UPI button -->
+  <button class="payBtn" onclick="payQR()">💛 Send Luck via QR</button>
+
+  <h3>💰 Total ₹<span id="total">0</span></h3>
+
+  <!-- QR Section -->
+  <div class="qr-section">
+    <h3>💛 Pay via QR</h3>
+    <a id="upiLink" href="upi://pay?pa=yourupi@bank&pn=CSK%20Fund&am=0&cu=INR" target="_blank">
+      <img src="images/csk-qr.png" alt="CSK UPI QR">
+    </a>
+    <p>Scan QR or tap on mobile to pay directly!</p>
+  </div>
+
+  <!-- 🔥 LIVE TICKER -->
+  <div class="ticker">
+    <span id="tickerText">🔥 Live Donations Loading...</span>
+  </div>
+
+</div>
+
+<div id="popup" class="popup"></div>
+
+<audio id="cheer">
+  <source src="https://www.soundjay.com/human/applause-01.mp3">
+</audio>
+
+<script>
+let total = parseInt(localStorage.getItem("total") || "0");
+document.getElementById("total").innerText = total;
+
+let names = ["Rahul","Amit","Sneha","Priya","Vikas","Anjali","Rohit","Pooja"];
+let amounts = [10,20,50,101,201];
+
+// ✅ Set amount
+function setAmt(a) {
+  document.getElementById("amount").value = a;
+}
+
+// ✅ Razorpay Payment
+function pay() {
+  let amount = parseInt(document.getElementById("amount").value);
+  if (!amount) return alert("Enter amount");
+
+  let name = prompt("Your name") || "CSK Fan";
+
+  let options = {
+    key: "YOUR_RAZORPAY_KEY_ID",
+    amount: amount * 100,
+    currency: "INR",
+    name: "CSK Fund",
+    handler: function () {
+      success(amount, name);
+    }
+  };
+
+  new Razorpay(options).open();
+}
+
+// ✅ Direct QR/UPI Payment
+function payQR() {
+  let amount = parseInt(document.getElementById("amount").value) || 0;
+  let link = `upi://pay?pa=yourupi@bank&pn=CSK%20Fund&am=${amount}&cu=INR`;
+  window.location.href = link;
+}
+
+// ✅ Success Handler
+function success(amount, name) {
+  total += amount;
+  localStorage.setItem("total", total);
+  document.getElementById("total").innerText = total;
+
+  confetti();
+  document.getElementById("cheer").play();
+  showPopup(`💛 ${name} donated ₹${amount}`);
+  addTicker(`${name} donated ₹${amount} 💛`);
+}
+
+// 🔥 Add to ticker
+function addTicker(text) {
+  let ticker = document.getElementById("tickerText");
+  ticker.innerText += "   🔥   " + text;
+}
+
+// 🔥 Fake activity generator
+setInterval(() => {
+  let name = names[Math.floor(Math.random()*names.length)];
+  let amt = amounts[Math.floor(Math.random()*amounts.length)];
+
+  total += amt;
+  localStorage.setItem("total", total);
+  document.getElementById("total").innerText = total;
+
+  addTicker(`${name} donated ₹${amt}`);
+  showPopup(`🔥 ${name} just donated ₹${amt}`);
+
+}, 4000);
+
+// 🔥 Popup
+function showPopup(text) {
+  let p = document.getElementById("popup");
+  p.innerText = text;
+  p.style.opacity = 1;
+
+  setTimeout(() => p.style.opacity = 0, 2000);
+}
+
+// ✅ Update UPI link dynamically with entered amount
+document.getElementById("amount").addEventListener("input", () => {
+  let amt = document.getElementById("amount").value || 0;
+  document.getElementById("upiLink").href = 
+    `upi://pay?pa=yourupi@bank&pn=CSK%20Fund&am=${amt}&cu=INR`;
+});
+</script>
+
 </body>
 </html>
