@@ -1133,7 +1133,7 @@ const randomFans = [
 
   <div class="pay-card">
     <div class="qr-holder" id="qrBox">
-      <img src="my-qr.png" alt="Scan QR">
+      <img id="qrImg" src="../assets/QR_FILENAME.png" alt="Scan to Support">
       <p style="font-size: 10px; color: #888;">Scan to Pay via Desktop</p>
     </div>
     <button class="pay-btn" id="payBtn" onclick="initiatePayment()" disabled>Select Your Side</button>
@@ -1143,7 +1143,7 @@ const randomFans = [
 
 <script>
   // --- 1. CONFIGURATION ---
-  const UPI_ID = "shiva17@ibl"; // 👈 REPLACE THIS
+  const UPI_ID = "shiva17@ybl"; // 👈 REPLACE THIS
   const MERCHANT_NAME = "IPL Fan Battle";
 
   const firebaseConfig = {
