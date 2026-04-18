@@ -1111,7 +1111,7 @@ const randomFans = [
 <body>
 
 <div class="app">
-  <h1>FAN BATTLE ⚔️</h1>
+  <h1>IPL FAN BATTLE 2026 ⚔️</h1>
   
   <div class="leaderboard" id="leaderboard">
     <p style="padding:40px; color:#666; text-align: center;">Stadium Loading...</p>
@@ -1143,8 +1143,8 @@ const randomFans = [
 
 <script>
   // --- 1. CONFIGURATION ---
-  const UPI_ID = "shiva17@ybl"; // 👈 REPLACE THIS
-  const MERCHANT_NAME = "IPL Fan Battle";
+  const UPI_ID = "paytmqr1xeqpd69e7@paytm"; // 👈 REPLACE THIS
+  const MERCHANT_NAME = "Shiva Mishra";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCTQgN5MSqjb4RwKlWg11mLtpkzB9rFGRU",
@@ -1211,7 +1211,7 @@ const randomFans = [
     const btn = document.getElementById('payBtn');
     if(selTeam && selAmt) {
       btn.disabled = false;
-      btn.innerText = `Deploy ₹${selAmt} for ${selTeam.name}`;
+      btn.innerText = `Support ₹${selAmt} for your ${selTeam.name}`;
       btn.style.background = selTeam.color;
       btn.style.color = (['CSK','SRH','GT'].includes(selTeam.name)) ? '#000' : '#fff';
       document.getElementById('qrBox').style.display = 'block';
