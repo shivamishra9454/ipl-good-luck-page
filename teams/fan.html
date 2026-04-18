@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,38 +20,32 @@
 
     /* Leaderboard */
     .leaderboard { background: var(--glass); border-radius: 24px; padding: 15px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.1); max-height: 250px; overflow-y: auto; scrollbar-width: none; }
-    .lb-row { display: flex; align-items: center; padding: 12px; margin: 8px 0; background: rgba(255,255,255,0.03); border-radius: 16px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .rank { width: 30px; color: var(--accent); font-weight: 800; }
+    .lb-row { display: flex; align-items: center; padding: 12px; margin: 8px 0; background: rgba(255,255,255,0.03); border-radius: 16px; transition: 0.5s; }
     .logo { width: 35px; height: 35px; margin-right: 15px; object-fit: contain; }
     .name { flex-grow: 1; text-align: left; font-weight: 600; font-size: 14px; }
     .val { font-family: 'Bungee', cursive; font-size: 14px; color: var(--accent); }
 
     /* Grids */
-    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; margin-bottom: 25px; }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; margin-bottom: 20px; }
     .team-chip { padding: 15px 5px; background: var(--glass); border-radius: 20px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; text-align: center; }
     .team-chip.active { border-color: var(--accent); background: rgba(251, 176, 59, 0.1); transform: translateY(-5px); }
     .team-chip img { width: 40px; height: 40px; object-fit: contain; }
     
-    .amt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 25px; }
+    .amt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
     .amt-chip { padding: 12px 5px; background: var(--glass); border-radius: 12px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); text-align: center; color: white; }
     .amt-chip.active { background: var(--accent); color: #000; }
 
-    /* The Fix: QR Payment Card */
+    /* Payment Card */
     .pay-card { background: white; border-radius: 32px; padding: 25px; color: #111; text-align: center; }
-    .qr-holder { margin-bottom: 15px; display: none; animation: fadeIn 0.5s ease-in; }
-    .qr-holder img { width: 220px; height: 220px; border: 4px solid #f1f1f1; border-radius: 20px; margin-bottom: 10px; }
-    
-    .instruction { font-size: 13px; font-weight: 800; color: #d32f2f; margin: 10px 0; text-transform: uppercase; }
-    .sub-text { font-size: 11px; color: #666; margin-bottom: 15px; }
+    .qr-holder { margin-bottom: 15px; display: none; }
+    .qr-holder img { width: 180px; height: 180px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 10px; }
 
     .pay-btn { width: 100%; padding: 20px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; background: #000; color: #fff; font-size: 16px; transition: 0.3s; text-transform: uppercase; }
     .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-    /* Toast */
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: white; padding: 10px 20px; border-radius: 50px; border: 1px solid var(--accent); font-size: 12px; z-index: 9999; animation: slideUp 0.5s ease-out; }
-    
+    /* Notifications */
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); color: white; padding: 12px 24px; border-radius: 50px; border: 1px solid var(--accent); font-size: 12px; z-index: 1000; animation: slideUp 0.5s ease-out; }
     @keyframes slideUp { from { bottom: -60px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
   </style>
 </head>
 <body>
@@ -59,7 +54,7 @@
   <h1>FAN BATTLE ⚔️</h1>
   
   <div class="leaderboard" id="leaderboard">
-    <p style="padding:40px; text-align: center;">Stadium Loading...</p>
+    <p style="padding:40px; text-align: center;">Syncing Stadium...</p>
   </div>
 
   <div class="team-grid" id="teamPicker"></div>
@@ -76,16 +71,18 @@
 
   <div class="pay-card">
     <div class="qr-holder" id="qrBox">
-      <img src="my-qr.png" alt="Payment QR">
-      <p class="instruction">📸 Screenshot & Pay via Gallery</p>
-      <p class="sub-text">Pay in GPay, PhonePe, or Paytm</p>
+      <img src="../assets/2.png" alt="Scan QR to Support">
+      <p style="font-size: 10px; color: #888;">Scan QR or click below to pay</p>
     </div>
-    <button class="pay-btn" id="payBtn" onclick="confirmAndBoost()" disabled>Select Your Army</button>
+    <button class="pay-btn" id="payBtn" onclick="handlePayment()" disabled>Select Your Side</button>
   </div>
 </div>
 
 <script>
-  // --- FIREBASE CONFIG ---
+  // --- 1. SETTINGS ---
+  const UPI_ID = "paytmqr1xeqpd69e7@paytm"; // ⚠️ REPLACE WITH YOUR UPI ID
+  const MERCHANT_NAME = "Shiva Mishra";
+
   const firebaseConfig = {
     apiKey: "AIzaSyCTQgN5MSqjb4RwKlWg11mLtpkzB9rFGRU",
     authDomain: "ipl-fan-battle.firebaseapp.com",
@@ -96,11 +93,11 @@
     appId: "1:1089235360818:web:8458a1f9df2553d8a4702b"
   };
 
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.database(app);
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
   const votesRef = db.ref('ipl_votes');
 
-  const teams = [
+ const teams = [
 { name: "CSK", color: "#FDB913", logo: "https://upload.wikimedia.org/wikipedia/en/2/2b/Chennai_Super_Kings_Logo.svg" },
 { name: "MI", color: "#004B8D", logo: "https://upload.wikimedia.org/wikipedia/en/c/cd/Mumbai_Indians_Logo.svg" },
 { name: "RCB", color: "#2B2A29", logo: "https://www.royalchallengers.com/themes/custom/rcbbase/images/rcb-logo-new.png" },
@@ -115,7 +112,7 @@
 
   let selTeam = null, selAmt = 0;
 
-  // Real-time Sync
+  // --- 2. LOGIC ---
   votesRef.on('value', (snap) => {
     const data = snap.val() || {};
     const sorted = teams.map(t => ({...t, score: data[t.name] || 0})).sort((a,b) => b.score - a.score);
@@ -137,35 +134,41 @@
     selTeam = teams.find(t => t.name === name);
     document.querySelectorAll('.team-chip').forEach(c => c.classList.remove('active'));
     document.getElementById(`chip-${name}`).classList.add('active');
-    updateUI();
+    updateBtn();
   }
 
   function setAmt(v, el) {
     selAmt = v;
     document.querySelectorAll('.amt-chip').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
-    updateUI();
+    updateBtn();
   }
 
-  function updateUI() {
-    const btn = document.getElementById('payBtn');
+  function updateBtn() {
+    const b = document.getElementById('payBtn');
     if(selTeam && selAmt) {
-      btn.disabled = false;
-      btn.innerText = `I Have Paid ₹${selAmt} 🚀`;
-      btn.style.background = selTeam.color;
-      btn.style.color = (['CSK','SRH','GT'].includes(selTeam.name)) ? '#000' : '#fff';
+      b.disabled = false;
+      b.innerText = `Pay Now ₹${selAmt} for ${selTeam.name}`;
+      b.style.background = selTeam.color;
+      b.style.color = (['CSK','SRH','GT'].includes(selTeam.name)) ? '#000' : '#fff';
       document.getElementById('qrBox').style.display = 'block';
     }
   }
 
-  function confirmAndBoost() {
-    // 🔥 Firebase Update & Confetti
+  function handlePayment() {
+    // 🔥 STEP 1: Direct Mobile Pay (Deep Link)
+    const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=Support${selTeam.name}`;
+    window.location.href = upiLink;
+    
+    // 🔥 STEP 2: Record Vote in Firebase
     votesRef.child(selTeam.name).transaction(curr => (curr || 0) + 1);
-    confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
-    showLiveToast(`🎉 Signal Received! ${selTeam.name} army boosted!`);
+    
+    // 🔥 STEP 3: Hype Effects
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
+    showToast(`🚀 Signal Sent! Boosting ${selTeam.name}...`);
   }
 
-  // --- 🎲 COMPETITIVE ENGINE ---
+  // --- 3. RANDOMNESS ENGINE ---
 const randomFans = [
 "Rahul", "Anjali", "Vikram", "Sneha", "Priya", "Amit", "Rohit", "Neha",
 "Karan", "Pooja", "Saurabh", "Ritika", "Manish", "Nidhi", "Akash", "Divya",
@@ -227,19 +230,19 @@ const randomFans = [
 "Deepa", "Latha", "Rekha", "Gayathri", "Aishwarya", "Soumya", "Chitra"
 ];  setInterval(() => {
     const rt = teams[Math.floor(Math.random() * teams.length)];
-    const rf = fans[Math.floor(Math.random() * fans.length)];
+    const rf = randomFans[Math.floor(Math.random() * randomFans.length)];
     votesRef.child(rt.name).transaction(curr => (curr || 0) + 1);
-    showLiveToast(`🔥 ${rf} just boosted ${rt.name}!`);
-  }, 10000);
+    showToast(`🔥 ${rf} just supported ${rt.name}!`);
+  }, 12000);
 
-  function showLiveToast(text) {
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = text;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3500);
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast'; t.innerHTML = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
   }
 </script>
 
 </body>
 </html>
+
