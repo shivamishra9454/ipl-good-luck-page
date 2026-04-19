@@ -51,7 +51,7 @@
 <body>
 
 <div class="app">
-  <h1>FAN BATTLE ⚔️</h1>
+  <h1>IPL FAN BATTLE 2026⚔️</h1>
   
   <div class="leaderboard" id="leaderboard">
     <p style="padding:40px; text-align: center;">Syncing Stadium...</p>
@@ -148,7 +148,7 @@
     const b = document.getElementById('payBtn');
     if(selTeam && selAmt) {
       b.disabled = false;
-      b.innerText = `Pay Now ₹${selAmt} for ${selTeam.name}`;
+      b.innerText = `Support  ₹${selAmt} for your ${selTeam.name}`;
       b.style.background = selTeam.color;
       b.style.color = (['CSK','SRH','GT'].includes(selTeam.name)) ? '#000' : '#fff';
       document.getElementById('qrBox').style.display = 'block';
