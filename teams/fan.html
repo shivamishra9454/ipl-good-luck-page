@@ -155,18 +155,44 @@
     }
   }
 
-  function handlePayment() {
-    // 🔥 STEP 1: Direct Mobile Pay (Deep Link)
-    const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=Support${selTeam.name}`;
+  // function handlePayment() {
+  //   // 🔥 STEP 1: Direct Mobile Pay (Deep Link)
+  //   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=Support${selTeam.name}`;
+  //   window.location.href = upiLink;
+    
+  //   // 🔥 STEP 2: Record Vote in Firebase
+  //   votesRef.child(selTeam.name).transaction(curr => (curr || 0) + 1);
+    
+  //   // 🔥 STEP 3: Hype Effects
+  //   confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
+  //   showToast(`🚀 Signal Sent! Boosting ${selTeam.name}...`);
+  // }
+
+function handlePayment() {
+    if (!selTeam || !selAmt) return;
+
+    // 1. Construct the UPI URL
+    // We use 'pa' (address), 'pn' (name), 'am' (amount), and 'tn' (transaction note)
+    const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=${encodeURIComponent('Support ' + selTeam.name)}`;
+
+    // 2. Open the UPI App
+    // We use a timeout trick: if the deep link fails, it stays on the page.
     window.location.href = upiLink;
     
-    // 🔥 STEP 2: Record Vote in Firebase
+    // 3. Record the Vote in Firebase immediately 
+    // (This gives the user instant gratification while the pay app opens)
     votesRef.child(selTeam.name).transaction(curr => (curr || 0) + 1);
     
-    // 🔥 STEP 3: Hype Effects
-    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
-    showToast(`🚀 Signal Sent! Boosting ${selTeam.name}...`);
-  }
+    // 4. Hype Effects
+    confetti({ 
+        particleCount: 150, 
+        spread: 70, 
+        origin: { y: 0.6 }, 
+        colors: [selTeam.color, '#fff'] 
+    });
+    
+    showToast(`🚀 Opening Payment App for ${selTeam.name}...`);
+}
 
   // --- 3. RANDOMNESS ENGINE ---
 const randomFans = [
