@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +24,7 @@
     .name { flex-grow: 1; text-align: left; font-weight: 600; font-size: 14px; }
     .val { font-family: 'Bungee', cursive; font-size: 14px; color: var(--accent); }
 
-    /* Grids */
+    /* Grid */
     .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 10px; margin-bottom: 20px; }
     .team-chip { padding: 15px 5px; background: var(--glass); border-radius: 20px; cursor: pointer; border: 2px solid transparent; transition: 0.3s; text-align: center; }
     .team-chip.active { border-color: var(--accent); background: rgba(251, 176, 59, 0.1); transform: translateY(-5px); }
@@ -43,7 +42,6 @@
     .pay-btn { width: 100%; padding: 20px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; background: #000; color: #fff; font-size: 16px; transition: 0.3s; text-transform: uppercase; }
     .pay-btn:disabled { background: #ccc; cursor: not-allowed; }
 
-    /* Notifications */
     .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); color: white; padding: 12px 24px; border-radius: 50px; border: 1px solid var(--accent); font-size: 12px; z-index: 1000; animation: slideUp 0.5s ease-out; }
     @keyframes slideUp { from { bottom: -60px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
   </style>
@@ -51,7 +49,7 @@
 <body>
 
 <div class="app">
-  <h1>IPL FAN BATTLE 2026⚔️</h1>
+  <h1>IPL FAN BATTLE ⚔️</h1>
   
   <div class="leaderboard" id="leaderboard">
     <p style="padding:40px; text-align: center;">Syncing Stadium...</p>
@@ -72,15 +70,16 @@
   <div class="pay-card">
     <div class="qr-holder" id="qrBox">
       <img src="../assets/2.png" alt="Scan QR to Support">
-      <p style="font-size: 10px; color: #888;">Scan QR or click below to pay</p>
+      <p style="font-size: 12px; font-weight: bold; color: #d32f2f;">📸 Screenshot & Pay from Gallery</p>
+      <p style="font-size: 10px; color: #888;">Use GPay, PhonePe, or Paytm</p>
     </div>
     <button class="pay-btn" id="payBtn" onclick="handlePayment()" disabled>Select Your Side</button>
   </div>
 </div>
 
 <script>
-  // --- 1. SETTINGS ---
-  const UPI_ID = "paytmqr1xeqpd69e7@paytm"; // ⚠️ REPLACE WITH YOUR UPI ID
+  // --- SETTINGS ---
+  const UPI_ID = "paytmqr1xeqpd69e7@paytm"; 
   const MERCHANT_NAME = "Shiva Mishra";
 
   const firebaseConfig = {
@@ -97,22 +96,21 @@
   const db = firebase.database();
   const votesRef = db.ref('ipl_votes');
 
- const teams = [
-{ name: "CSK", color: "#FDB913", logo: "https://upload.wikimedia.org/wikipedia/en/2/2b/Chennai_Super_Kings_Logo.svg" },
-{ name: "MI", color: "#004B8D", logo: "https://upload.wikimedia.org/wikipedia/en/c/cd/Mumbai_Indians_Logo.svg" },
-{ name: "RCB", color: "#2B2A29", logo: "https://www.royalchallengers.com/themes/custom/rcbbase/images/rcb-logo-new.png" },
-{ name: "KKR", color: "#3A225D", logo: "https://upload.wikimedia.org/wikipedia/en/4/4c/Kolkata_Knight_Riders_Logo.svg" },
-{ name: "GT", color: "#1B2133", logo: "https://upload.wikimedia.org/wikipedia/en/0/09/Gujarat_Titans_Logo.svg" },
-{ name: "SRH", color: "#FF822A", logo: "https://www.sunrisershyderabad.in/assets/teamLogo/srhLogo.svg" },
-{ name: "DC", color: "#17449B", logo: "https://upload.wikimedia.org/wikipedia/en/2/2f/Delhi_Capitals.svg" },
-{ name: "RR", color: "#EA1A85", logo: "https://documents.iplt20.com/ipl/RR/Logos/RR_Logo.png" },
-{ name: "PBKS", color: "#D71920", logo: "https://upload.wikimedia.org/wikipedia/en/d/d4/Punjab_Kings_Logo.svg" },
-{ name: "LSG", color: "#A72056", logo: "https://documents.iplt20.com/ipl/LSG/Logos/Logooutline/LSGoutline.png" }
-];
+  const teams = [
+    { name: "CSK", color: "#FDB913", logo: "https://upload.wikimedia.org/wikipedia/en/2/2b/Chennai_Super_Kings_Logo.svg" },
+    { name: "MI", color: "#004B8D", logo: "https://upload.wikimedia.org/wikipedia/en/c/cd/Mumbai_Indians_Logo.svg" },
+    { name: "RCB", color: "#2B2A29", logo: "https://upload.wikimedia.org/wikipedia/en/2/2a/Royal_Challengers_Bangalore_Logo.svg" },
+    { name: "KKR", color: "#3A225D", logo: "https://upload.wikimedia.org/wikipedia/en/4/4c/Kolkata_Knight_Riders_Logo.svg" },
+    { name: "GT", color: "#1B2133", logo: "https://upload.wikimedia.org/wikipedia/en/0/09/Gujarat_Titans_Logo.svg" },
+    { name: "SRH", color: "#FF822A", logo: "https://upload.wikimedia.org/wikipedia/en/8/81/Sunrisers_Hyderabad.svg" },
+    { name: "DC", color: "#17449B", logo: "https://upload.wikimedia.org/wikipedia/en/2/2f/Delhi_Capitals.svg" },
+    { name: "RR", color: "#EA1A85", logo: "https://upload.wikimedia.org/wikipedia/en/6/60/Rajasthan_Royals_Logo.svg" },
+    { name: "PBKS", color: "#D71920", logo: "https://upload.wikimedia.org/wikipedia/en/d/d4/Punjab_Kings_Logo.svg" },
+    { name: "LSG", color: "#A72056", logo: "https://upload.wikimedia.org/wikipedia/en/7/75/Lucknow_Super_Giants_Logo.svg" }
+  ];
 
   let selTeam = null, selAmt = 0;
 
-  // --- 2. LOGIC ---
   votesRef.on('value', (snap) => {
     const data = snap.val() || {};
     const sorted = teams.map(t => ({...t, score: data[t.name] || 0})).sort((a,b) => b.score - a.score);
@@ -148,118 +146,29 @@
     const b = document.getElementById('payBtn');
     if(selTeam && selAmt) {
       b.disabled = false;
-      b.innerText = `Support  ₹${selAmt} for your ${selTeam.name}`;
+      b.innerText = `Pay & Boost ${selTeam.name}`;
       b.style.background = selTeam.color;
       b.style.color = (['CSK','SRH','GT'].includes(selTeam.name)) ? '#000' : '#fff';
       document.getElementById('qrBox').style.display = 'block';
     }
   }
 
-  // function handlePayment() {
-  //   // 🔥 STEP 1: Direct Mobile Pay (Deep Link)
-  //   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=Support${selTeam.name}`;
-  //   window.location.href = upiLink;
+  function handlePayment() {
+    if(!selTeam || !selAmt) return;
+
+    // 🔥 THE FIX: Structured UPI Intent with encoded name and transaction note
+    const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Support' + selTeam.name)}`;
     
-  //   // 🔥 STEP 2: Record Vote in Firebase
-  //   votesRef.child(selTeam.name).transaction(curr => (curr || 0) + 1);
-    
-  //   // 🔥 STEP 3: Hype Effects
-  //   confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
-  //   showToast(`🚀 Signal Sent! Boosting ${selTeam.name}...`);
-  // }
-
-function handlePayment() {
-    if (!selTeam || !selAmt) return;
-
-    // 1. Construct the UPI URL
-    // We use 'pa' (address), 'pn' (name), 'am' (amount), and 'tn' (transaction note)
-    const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selAmt}&cu=INR&tn=${encodeURIComponent('Support ' + selTeam.name)}`;
-
-    // 2. Open the UPI App
-    // We use a timeout trick: if the deep link fails, it stays on the page.
+    // Attempt to open the app
     window.location.href = upiLink;
     
-    // 3. Record the Vote in Firebase immediately 
-    // (This gives the user instant gratification while the pay app opens)
+    // Update Firebase for the user (Gratification)
     votesRef.child(selTeam.name).transaction(curr => (curr || 0) + 1);
     
-    // 4. Hype Effects
-    confetti({ 
-        particleCount: 150, 
-        spread: 70, 
-        origin: { y: 0.6 }, 
-        colors: [selTeam.color, '#fff'] 
-    });
-    
-    showToast(`🚀 Opening Payment App for ${selTeam.name}...`);
-}
-
-  // --- 3. RANDOMNESS ENGINE ---
-const randomFans = [
-"Rahul", "Anjali", "Vikram", "Sneha", "Priya", "Amit", "Rohit", "Neha",
-"Karan", "Pooja", "Saurabh", "Ritika", "Manish", "Nidhi", "Akash", "Divya",
-"Vikas", "Shreya", "Harsh", "Kavita", "Deepak", "Payal", "Nitin", "Aarti",
-"Rajeev", "Komal", "Gaurav", "Sonia", "Sandeep", "Rekha", "Abhishek", "Meena",
-"Sunil", "Preeti", "Ankit", "Sapna", "Ravi", "Pallavi", "Varun", "Rashmi",
-
-"Gurpreet", "Jaspreet", "Manpreet", "Harpreet", "Navdeep", "Amandeep",
-"Rajdeep", "Kuldeep", "Sukhdeep", "Paramjit", "Simran", "Jasleen",
-"Navjot", "Harleen",
-
-"Rahul Sharma", "Anjali Verma", "Vikram Singh", "Sneha Gupta", "Priya Mishra",
-"Amit Kumar", "Rohit Yadav", "Neha Patel", "Karan Mehta", "Pooja Agarwal",
-"Arjun Reddy", "Simran Kaur", "Saurabh Jain", "Ritika Saxena", "Manish Tiwari",
-"Nidhi Chauhan", "Akash Sharma", "Divya Pandey", "Vikas Dubey", "Shreya Srivastava",
-"Harsh Vardhan", "Kavita Joshi", "Deepak Thakur", "Payal Singh", "Nitin Bansal",
-"Aarti Yadav", "Rajeev Gupta", "Komal Sharma", "Gaurav Mishra", "Sonia Kapoor",
-"Sandeep Yadav", "Rekha Devi", "Abhishek Singh", "Meena Kumari", "Sunil Kumar",
-"Preeti Jain", "Ankit Verma", "Sapna Tiwari", "Ravi Shankar", "Pallavi Mishra",
-
-"Varun Saxena", "Rashmi Singh", "Mohit Gupta", "Pankaj Yadav", "Swati Sharma",
-"Tarun Jain", "Neelam Devi", "Hemant Verma", "Seema Kapoor", "Ashish Mishra",
-"Anupama Singh", "Lokesh Sharma", "Bhavna Yadav", "Rakesh Dubey", "Tanuja Joshi",
-"Sanjay Gupta", "Kirti Saxena", "Ajay Kumar", "Nikita Verma", "Devendra Singh",
-
-"Alka Mishra", "Shivam Yadav", "Monika Sharma", "Rajesh Jain", "Neetu Kapoor",
-"Prakash Singh", "Lata Devi", "Gopal Mishra", "Renu Saxena", "Mahesh Gupta",
-"Reema Sharma", "Chandan Yadav", "Kiran Verma", "Dinesh Mishra", "Sarita Singh",
-"Suresh Kumar", "Madhu Gupta", "Vivek Sharma", "Indu Yadav", "Yogesh Mishra",
-
-"Sangeeta Jain", "Raman Verma", "Geeta Kapoor", "Naresh Gupta", "Kamini Singh",
-"Rohini Sharma", "Brijesh Mishra", "Pooja Singh", "Girish Verma", "Savita Devi",
-"Mukesh Kumar", "Anuradha Gupta", "Ravindra Singh", "Leena Sharma", "Shivendra Mishra",
-
-"Vandana Kapoor", "Anil Kumar", "Deepa Yadav", "Kapil Sharma", "Sunita Mishra",
-"Ritesh Verma", "Kusum Singh", "Naveen Gupta", "Rekha Sharma", "Ajit Yadav",
-"Rachna Mishra", "Bharat Singh", "Priti Kapoor", "Om Prakash", "Sejal Sharma",
-
-"Shyam Gupta", "Radha Mishra", "Hariram Singh", "Madhuri Verma", "Lalit Yadav",
-"Kavya Sharma", "Umesh Mishra", "Sonam Kapoor", "Pradeep Gupta", "Naina Singh",
-"Rajendra Kumar", "Muskan Sharma", "Vinod Yadav", "Tanvi Mishra", "Kishan Gupta",
-
-"Ayesha Singh", "Sahil Verma", "Anushka Sharma", "Aditya Mishra", "Riya Kapoor",
-"Arvind Gupta", "Ishita Singh", "Gautam Yadav", "Pallavi Sharma", "Raghav Mishra",
-"Shruti Kapoor", "Dev Gupta", "Tanya Singh", "Anmol Verma", "Aditi Sharma",
-"Lakhan Yadav", "Sakshi Mishra",
-
-"Mandeep", "Gurleen", "Baljit", "Daljit", "Amrit", "Kamaljit", "Inder",
-"Jasbir", "Ranveer", "Dilpreet", "Gagandeep", "Ravneet", "Taran",
-"Lovepreet", "Rajveer", "Harman", "Guneet", "Sandeep", "Harjit",
-"Ranjit", "Tejinder", "Maninder", "Gurvinder", "Kulwinder",
-"Parminder", "Balvinder",
-
-"Arjun", "Karthik", "Vignesh", "Suresh", "Ramesh", "Mahesh", "Ganesh",
-"Dinesh", "Prakash", "Srinivas", "Venkatesh", "Raghav", "Mohan",
-"Naveen", "Harish", "Krishna", "Ajith", "Surya", "Ravi", "Kiran",
-"Lakshmi", "Anitha", "Divya", "Shruti", "Bhavya", "Pavithra",
-"Meena", "Radha", "Suma", "Nandini", "Kavya", "Keerthi", "Swathi",
-"Deepa", "Latha", "Rekha", "Gayathri", "Aishwarya", "Soumya", "Chitra"
-];  setInterval(() => {
-    const rt = teams[Math.floor(Math.random() * teams.length)];
-    const rf = randomFans[Math.floor(Math.random() * randomFans.length)];
-    votesRef.child(rt.name).transaction(curr => (curr || 0) + 1);
-    showToast(`🔥 ${rf} just supported ${rt.name}!`);
-  }, 12000);
+    // Effects
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [selTeam.color, '#fff'] });
+    showToast(`🚀 Signal Sent! Boosting ${selTeam.name}...`);
+  }
 
   function showToast(msg) {
     const t = document.createElement('div');
@@ -267,8 +176,13 @@ const randomFans = [
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 4000);
   }
+
+  // Activity Simulation
+  setInterval(() => {
+    const rt = teams[Math.floor(Math.random() * teams.length)];
+    votesRef.child(rt.name).transaction(curr => (curr || 0) + 1);
+  }, 10000);
 </script>
 
 </body>
 </html>
-
